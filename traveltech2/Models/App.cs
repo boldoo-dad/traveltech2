@@ -8,8 +8,7 @@ namespace traveltech2.Models
     public class App
     {
         public int Id { get; set; }
-        public string HeadID { get; set; }
+        public int? HeadID { get; set; }
         public Head Head { get; set; }
-
     }
 }

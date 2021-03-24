@@ -1,20 +1,17 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using traveltech2.Models;
 
-namespace traveltech2.Models
+namespace traveltech2.Controllers.Dto
 {
-    public class Drop
+    public class DropDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Desc { get; set; }
-
-
         public int? MenuID { get; set; }
-        [JsonIgnore]
-        public Menu Menu { get; set; }
+        //public Menu Menu { get; set; }
     }
 }

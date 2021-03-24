@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using traveltech2.Models;
 
-namespace traveltech2.Models
+namespace traveltech2.Controllers.Dto
 {
-    public class Logo
+    public class MenuDto
     {
         public int Id { get; set; }
-
         public string Name { get; set; }
-        [NotMapped]
-        public string Src { get; set; }
+        public string Url { get; set; }
+
+        public IList<Drop>? Drop { get; set; }
     }
 }
