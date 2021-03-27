@@ -25,22 +25,22 @@ namespace traveltech2.Controllers
             this.uow = uow;
             this.mapper = mapper;
         }
-        #region
-        [HttpGet("drop")]
+        #region Drop
+        [HttpGet("drops")]
         public async Task<IActionResult> GetDrops()
         {
             var drops = await uow.DropRepository.getDropsAsync();
             var dropsDto = mapper.Map<IEnumerable<DropDto>>(drops);
             return Ok(dropsDto);
         }
-        [HttpGet("drop/{id}")]
+        [HttpGet("drops/{id}")]
         public async Task<IActionResult> GetDrop(int id)
         {
             var dropFromDb = await uow.DropRepository.findDropAsync(id);
             var dropDto = mapper.Map<DropDto>(dropFromDb);
             return Ok(dropDto);
         }
-        [HttpPost("drop")]
+        [HttpPost("drops")]
         public async Task<IActionResult> AddDrop(DropDto dropDto)
         {
             var drop = mapper.Map<Drop>(dropDto);
@@ -48,7 +48,7 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return StatusCode(201);
         }
-        [HttpPut("drop/{id}")]
+        [HttpPut("drops/{id}")]
         public async Task<IActionResult> UpdateDrop(int id, DropDto dropDto)
         {
             if (id != dropDto.Id)
@@ -60,7 +60,7 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return StatusCode(200);
         }
-        [HttpPatch("drop/{id}")]
+        [HttpPatch("drops/{id}")]
         public async Task<IActionResult> UpdateDropPatch(int id, JsonPatchDocument<Drop> dropToPatch)
         {
             var dropFromDb = await uow.DropRepository.findDropAsync(id);
@@ -68,7 +68,7 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return StatusCode(200);
         }
-        [HttpDelete("drop/{id}")]
+        [HttpDelete("drops/{id}")]
         public async Task<IActionResult> DeleteDrop(int id)
         {
             var dropFromDb = await uow.DropRepository.findDropAsync(id);
@@ -78,24 +78,24 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return Ok(id);
         }
-
-
         #endregion
-        [HttpGet("menu")]
+
+        #region Menu
+        [HttpGet("menus")]
         public async Task<IActionResult> GetMenus()
         {
             var menus = await uow.MenuRepository.getMenusAsync();
             var menusDto = mapper.Map<IEnumerable<MenuDto>>(menus);
             return Ok(menusDto);
         }
-        [HttpGet("menu/{id}")]
+        [HttpGet("menus/{id}")]
         public async Task<IActionResult> GetMenu(int id)
         {
             var menuFromDb = await uow.MenuRepository.findMenuAsync(id);
             var menuDto = mapper.Map<MenuDto>(menuFromDb);
             return Ok(menuDto);
         }
-        [HttpPost("menu")]
+        [HttpPost("menus")]
         public async Task<IActionResult> AddMenu(MenuDto menuDto)
         {
             var menu = mapper.Map<Menu>(menuDto);
@@ -103,7 +103,7 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return StatusCode(201);
         }
-        [HttpPut("menu/{id}")]
+        [HttpPut("menus/{id}")]
         public async Task<IActionResult> UpdateMenu(int id, MenuDto menuDto)
         {
             if (id != menuDto.Id)
@@ -115,7 +115,7 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return StatusCode(200);
         }
-        [HttpPatch("menu/{id}")]
+        [HttpPatch("menus/{id}")]
         public async Task<IActionResult> UpdateMenuPatch(int id, JsonPatchDocument<Menu> menuToPatch)
         {
             var menuFromDb = await uow.MenuRepository.findMenuAsync(id);
@@ -123,7 +123,7 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return StatusCode(200);
         }
-        [HttpDelete("menu/{id}")]
+        [HttpDelete("menus/{id}")]
         public async Task<IActionResult> DeleteMenu(int id)
         {
             var menuFromDb = await uow.MenuRepository.findMenuAsync(id);
@@ -133,5 +133,6 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return Ok(id);
         }
+        #endregion
     }
 }

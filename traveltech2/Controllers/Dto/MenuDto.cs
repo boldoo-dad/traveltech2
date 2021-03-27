@@ -12,6 +12,7 @@ namespace traveltech2.Controllers.Dto
         public string Name { get; set; }
         public string Url { get; set; }
 
-        public IList<Drop>? Drop { get; set; }
+        public int? HeadID { get; set; }
+        public IEnumerable<Drop> Drop { get; set; }
     }
 }

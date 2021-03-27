@@ -9,6 +9,5 @@ namespace traveltech2.Models.Data
         public DbSet<Head> Heads { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Drop> Drops { get; set; }
-        public DbSet<Logo> Logos { get; set; }
     }
 }

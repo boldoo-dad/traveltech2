@@ -12,6 +12,5 @@ namespace traveltech2.Controllers.Dto
         public string Name { get; set; }
         public string Desc { get; set; }
         public int? MenuID { get; set; }
-        //public Menu Menu { get; set; }
     }
 }
