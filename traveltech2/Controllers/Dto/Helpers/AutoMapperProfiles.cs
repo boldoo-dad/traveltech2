@@ -13,6 +13,7 @@ namespace traveltech2.Controllers.Dto.Helpers
         {
             CreateMap<Drop, DropDto>().ReverseMap();
             CreateMap<Menu, MenuDto>().ReverseMap();
+            CreateMap<Head, HeadDto>().ReverseMap();
         }
     }
 }

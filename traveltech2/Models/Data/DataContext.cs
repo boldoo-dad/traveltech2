@@ -4,7 +4,9 @@ namespace traveltech2.Models.Data
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        {
+        }
         public DbSet<App> Apps { get; set; }
         public DbSet<Head> Heads { get; set; }
         public DbSet<Menu> Menus { get; set; }

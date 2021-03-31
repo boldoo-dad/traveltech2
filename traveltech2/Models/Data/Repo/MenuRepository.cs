@@ -32,7 +32,8 @@ namespace traveltech2.Models.Data.Repo
 
         public async Task<IEnumerable<Menu>> getMenusAsync()
         {
-            return await dc.Menus.Include(m => m.Drop).ToListAsync();
+            return await dc.Menus.Include(m => m.Drop)
+                .ToListAsync();
         }
     }
     public interface IMenuRepository

@@ -4,14 +4,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using traveltech2.Controllers.Dto.Helpers;
 using traveltech2.Models.Data;
+using Newtonsoft.Json;
 
 namespace traveltech2
 {
@@ -46,6 +49,11 @@ namespace traveltech2
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "wwwroot\\Images")),
+                RequestPath = "/wwwroot/Images"
+            });
 
             app.UseEndpoints(endpoints =>
             {

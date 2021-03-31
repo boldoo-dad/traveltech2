@@ -25,14 +25,21 @@ namespace traveltech2.Models.Data.Repo
             dc.Heads.Remove(id);
         }
 
+        //private Head getById(int id)
+        //{
+        //    return dc.Heads.Include(x => x.Menu).FirstOrDefault(x => x.Id == id);
+        //}
+
         public async Task<Head> findHeadAsync(int id)
         {
-            return await dc.Heads.FindAsync(id);
+            //return await Task.Run(()=>getById(id));
+            //return await dc.Heads.FindAsync(id);
+            return await dc.Heads.Include(x => x.Menu).ThenInclude(s => s.Drop).FirstOrDefaultAsync(y => y.Id == id);
         }
 
         public async Task<IEnumerable<Head>> getHeadsAsync()
         {
-            return await dc.Heads.ToListAsync();
+            return await dc.Heads.Include("Menu.Drop").ToListAsync();
         }
     }
     public interface IHeadRepository

@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using traveltech2.Controllers.Dto;
 using traveltech2.Models;
@@ -19,13 +21,15 @@ namespace traveltech2.Controllers
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
+        private readonly IWebHostEnvironment environment;
 
-        public AppController(IUnitOfWork uow, IMapper mapper)
+        public AppController(IUnitOfWork uow, IMapper mapper, IWebHostEnvironment environment)
         {
             this.uow = uow;
             this.mapper = mapper;
+            this.environment = environment;
         }
-        #region Drop
+        #region Drops
         [HttpGet("drops")]
         public async Task<IActionResult> GetDrops()
         {
@@ -60,14 +64,6 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return StatusCode(200);
         }
-        [HttpPatch("drops/{id}")]
-        public async Task<IActionResult> UpdateDropPatch(int id, JsonPatchDocument<Drop> dropToPatch)
-        {
-            var dropFromDb = await uow.DropRepository.findDropAsync(id);
-            dropToPatch.ApplyTo(dropFromDb, ModelState);
-            await uow.SaveAsync();
-            return StatusCode(200);
-        }
         [HttpDelete("drops/{id}")]
         public async Task<IActionResult> DeleteDrop(int id)
         {
@@ -80,7 +76,7 @@ namespace traveltech2.Controllers
         }
         #endregion
 
-        #region Menu
+        #region Menus
         [HttpGet("menus")]
         public async Task<IActionResult> GetMenus()
         {
@@ -115,14 +111,6 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return StatusCode(200);
         }
-        [HttpPatch("menus/{id}")]
-        public async Task<IActionResult> UpdateMenuPatch(int id, JsonPatchDocument<Menu> menuToPatch)
-        {
-            var menuFromDb = await uow.MenuRepository.findMenuAsync(id);
-            menuToPatch.ApplyTo(menuFromDb, ModelState);
-            await uow.SaveAsync();
-            return StatusCode(200);
-        }
         [HttpDelete("menus/{id}")]
         public async Task<IActionResult> DeleteMenu(int id)
         {
@@ -132,6 +120,113 @@ namespace traveltech2.Controllers
             uow.MenuRepository.deleteMenu(id);
             await uow.SaveAsync();
             return Ok(id);
+        }
+        #endregion
+
+        #region Heads
+        [HttpGet("heads")]
+        public async Task<IActionResult> GetHeads()
+        {
+            var heads = await uow.HeadRepository.getHeadsAsync();
+            var headsDto = mapper.Map<IEnumerable<HeadDto>>(heads.Select(m => new HeadDto()
+            {
+                Id = m.Id,
+                Menu = m.Menu,
+                ImageName = m.ImageName,
+                ImageSrc = String.Format("{0}://{1}{2}/wwwroot/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, m.ImageName)
+            }));
+            return Ok(headsDto);
+        }
+        [HttpGet("heads/{id}")]
+        public async Task<IActionResult> GetHead(int id)
+        {
+            var headFromDb = await uow.HeadRepository.findHeadAsync(id);
+            if (headFromDb == null)
+                return StatusCode(204);
+            headFromDb.ImageSrc = String.Format("{0}://{1}{2}/wwwroot/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, headFromDb.ImageName);
+            var headsDto = mapper.Map<HeadDto>(headFromDb);
+            return Ok(headsDto);
+        }
+        [HttpPost("heads")]
+        public async Task<IActionResult> PostHead([FromForm] HeadDto headDto)
+        {
+            var head = mapper.Map<Head>(headDto);
+            if (headDto.ImageFile != null)
+                head.ImageName = await ImageUploadAsync(headDto.ImageFile);
+            uow.HeadRepository.addHead(head);
+            await uow.SaveAsync();
+            return StatusCode(201);
+        }
+        [HttpPut("heads/{id}")]
+        public async Task<IActionResult> PutHead(int id, [FromForm] HeadDto headDto)
+        {
+            if (id != headDto.Id)
+                return BadRequest("Update not allowed");
+            var headFromDb = await uow.HeadRepository.findHeadAsync(id);
+            if (headFromDb == null)
+                return BadRequest("Update not allowed");
+            if (headDto.ImageFile != null)
+            {
+                if (headFromDb.ImageName != null)
+                    ImageDelete(headFromDb.ImageName);
+                headFromDb.ImageName = await ImageUploadAsync(headDto.ImageFile);
+                headDto.ImageName = headFromDb.ImageName;
+            }
+            mapper.Map(headDto, headFromDb);
+            await uow.SaveAsync();
+            return StatusCode(200);
+        }
+        [HttpPatch("heads/{id}")]
+        public async Task<IActionResult> PatchHead(int id, JsonPatchDocument<Head> headToPatch)
+        {
+            var headFromDb = await uow.HeadRepository.findHeadAsync(id);
+            headToPatch.ApplyTo(headFromDb, ModelState);
+            await uow.SaveAsync();
+            return StatusCode(200);
+        }
+
+        [HttpDelete("heads/{id}")]
+        public async Task<IActionResult> DeleteHead(int id)
+        {
+            var headFromDb = await uow.HeadRepository.findHeadAsync(id);
+            if (headFromDb == null)
+                return StatusCode(204);
+            if (headFromDb.ImageName != null)
+                ImageDelete(headFromDb.ImageName);
+            uow.HeadRepository.deleteHead(id);
+            await uow.SaveAsync();
+            return Ok(id);
+        }
+
+        #endregion
+
+        #region Image
+        [NonAction]
+        public async Task<string> ImageUploadAsync(IFormFile imageFile)
+        {
+            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
+            imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile.FileName);
+            var imagePath = Path.Combine(environment.ContentRootPath, "wwwroot\\Images", imageName);
+            using (var fileStream = new FileStream(imagePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(fileStream);
+            }
+            return imageName;
+        }
+        [NonAction]
+        public void ImageDelete(string imageName)
+        {
+            var imagePath = Path.Combine(environment.ContentRootPath, "wwwroot\\Images", imageName);
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
+            }
+            else
+            {
+                var imagePublishPath = Path.Combine(environment.ContentRootPath, "bin\\Release\netcoreapp3.1\\publish\\wwwroot\\Images", imageName);
+                if (System.IO.File.Exists(imagePublishPath))
+                    System.IO.File.Delete(imagePublishPath);
+            }
         }
         #endregion
     }
