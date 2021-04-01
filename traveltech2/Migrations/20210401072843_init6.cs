@@ -2,24 +2,25 @@
 
 namespace traveltech2.Migrations
 {
-    public partial class init1 : Migration
+    public partial class init6 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Heads",
+                name: "Head",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ImageName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Heads", x => x.Id);
+                    table.PrimaryKey("PK_Head", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Apps",
+                name: "App",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -28,11 +29,11 @@ namespace traveltech2.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Apps", x => x.Id);
+                    table.PrimaryKey("PK_App", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Apps_Heads_HeadID",
+                        name: "FK_App_Head_HeadID",
                         column: x => x.HeadID,
-                        principalTable: "Heads",
+                        principalTable: "Head",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -51,9 +52,9 @@ namespace traveltech2.Migrations
                 {
                     table.PrimaryKey("PK_Menus", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Menus_Heads_HeadID",
+                        name: "FK_Menus_Head_HeadID",
                         column: x => x.HeadID,
-                        principalTable: "Heads",
+                        principalTable: "Head",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -66,28 +67,28 @@ namespace traveltech2.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
                     Desc = table.Column<string>(nullable: true),
-                    MenuID = table.Column<int>(nullable: true)
+                    MenusID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MenuItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MenuItems_Menus_MenuID",
-                        column: x => x.MenuID,
+                        name: "FK_MenuItems_Menus_MenusID",
+                        column: x => x.MenusID,
                         principalTable: "Menus",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Apps_HeadID",
-                table: "Apps",
+                name: "IX_App_HeadID",
+                table: "App",
                 column: "HeadID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MenuItems_MenuID",
+                name: "IX_MenuItems_MenusID",
                 table: "MenuItems",
-                column: "MenuID");
+                column: "MenusID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Menus_HeadID",
@@ -97,7 +98,17 @@ namespace traveltech2.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-           
+            migrationBuilder.DropTable(
+                name: "App");
+
+            migrationBuilder.DropTable(
+                name: "MenuItems");
+
+            migrationBuilder.DropTable(
+                name: "Menus");
+
+            migrationBuilder.DropTable(
+                name: "Head");
         }
     }
 }

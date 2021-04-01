@@ -137,26 +137,26 @@ namespace traveltech2.Controllers
             });
             return Ok(headDto);
         }
-        [HttpGet("head/{id}")]
-        public async Task<IActionResult> GetHead(int id)
-        {
-            var headFromDb = await uow.HeadRepository.findHeadAsync(id);
-            if (headFromDb == null)
-                return StatusCode(204);
-            headFromDb.ImageSrc = String.Format("{0}://{1}{2}/wwwroot/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, headFromDb.ImageName);
-            var headsDto = mapper.Map<HeadDto>(headFromDb);
-            return Ok(headsDto);
-        }
-        [HttpPost("head")]
-        public async Task<IActionResult> PostHead([FromForm] HeadDto headDto)
-        {
-            var head = mapper.Map<Head>(headDto);
-            if (headDto.ImageFile != null)
-                head.ImageName = await ImageUploadAsync(headDto.ImageFile);
-            uow.HeadRepository.addHead(head);
-            await uow.SaveAsync();
-            return StatusCode(201);
-        }
+        //[HttpGet("head/{id}")]
+        //public async Task<IActionResult> GetHead(int id)
+        //{
+        //    var headFromDb = await uow.HeadRepository.findHeadAsync(id);
+        //    if (headFromDb == null)
+        //        return StatusCode(204);
+        //    headFromDb.ImageSrc = String.Format("{0}://{1}{2}/wwwroot/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, headFromDb.ImageName);
+        //    var headsDto = mapper.Map<HeadDto>(headFromDb);
+        //    return Ok(headsDto);
+        //}
+        //[HttpPost("head")]
+        //public async Task<IActionResult> PostHead([FromForm] HeadDto headDto)
+        //{
+        //    var head = mapper.Map<Head>(headDto);
+        //    if (headDto.ImageFile != null)
+        //        head.ImageName = await ImageUploadAsync(headDto.ImageFile);
+        //    uow.HeadRepository.addHead(head);
+        //    await uow.SaveAsync();
+        //    return StatusCode(201);
+        //}
         [HttpPut("head/{id}")]
         public async Task<IActionResult> PutHead(int id, [FromForm] HeadDto headDto)
         {
@@ -176,28 +176,27 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return StatusCode(200);
         }
-        [HttpPatch("head/{id}")]
-        public async Task<IActionResult> PatchHead(int id, JsonPatchDocument<Head> headToPatch)
-        {
-            var headFromDb = await uow.HeadRepository.findHeadAsync(id);
-            headToPatch.ApplyTo(headFromDb, ModelState);
-            await uow.SaveAsync();
-            return StatusCode(200);
-        }
+        //[HttpPatch("head/{id}")]
+        //public async Task<IActionResult> PatchHead(int id, JsonPatchDocument<Head> headToPatch)
+        //{
+        //    var headFromDb = await uow.HeadRepository.findHeadAsync(id);
+        //    headToPatch.ApplyTo(headFromDb, ModelState);
+        //    await uow.SaveAsync();
+        //    return StatusCode(200);
+        //}
 
-        [HttpDelete("head/{id}")]
-        public async Task<IActionResult> DeleteHead(int id)
-        {
-            var headFromDb = await uow.HeadRepository.findHeadAsync(id);
-            if (headFromDb == null)
-                return StatusCode(204);
-            if (headFromDb.ImageName != null)
-                ImageDelete(headFromDb.ImageName);
-            uow.HeadRepository.deleteHead(id);
-            await uow.SaveAsync();
-            return Ok(id);
-        }
-
+        //[HttpDelete("head/{id}")]
+        //public async Task<IActionResult> DeleteHead(int id)
+        //{
+        //    var headFromDb = await uow.HeadRepository.findHeadAsync(id);
+        //    if (headFromDb == null)
+        //        return StatusCode(204);
+        //    if (headFromDb.ImageName != null)
+        //        ImageDelete(headFromDb.ImageName);
+        //    uow.HeadRepository.deleteHead(id);
+        //    await uow.SaveAsync();
+        //    return Ok(id);
+        //}
         #endregion
 
         #region App
