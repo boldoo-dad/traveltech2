@@ -176,6 +176,25 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return StatusCode(200);
         }
+        [HttpPut("headUpdate/{id}")]
+        public async Task<IActionResult> PutHead(int id, [FromForm] HeadUpdateDto headDto)
+        {
+            if (id != headDto.Id)
+                return BadRequest("Update not allowed");
+            var headFromDb = await uow.HeadRepository.findHeadAsync(id);
+            if (headFromDb == null)
+                return BadRequest("Update not allowed");
+            if (headDto.ImageFile != null)
+            {
+                if (headFromDb.ImageName != null)
+                    ImageDelete(headFromDb.ImageName);
+                headFromDb.ImageName = await ImageUploadAsync(headDto.ImageFile);
+                headDto.ImageName = headFromDb.ImageName;
+            }
+            mapper.Map(headDto, headFromDb);
+            await uow.SaveAsync();
+            return StatusCode(200);
+        }
         //[HttpPatch("head/{id}")]
         //public async Task<IActionResult> PatchHead(int id, JsonPatchDocument<Head> headToPatch)
         //{

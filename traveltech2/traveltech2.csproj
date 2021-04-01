@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="bin\Release\netcoreapp3.1\publish\wwwroot\Images\" />
     <Folder Include="wwwroot\Images\" />
   </ItemGroup>
 

@@ -14,6 +14,7 @@ namespace traveltech2.Controllers.Dto.Helpers
             CreateMap<MenuItems, MenuItemsDto>().ReverseMap();
             CreateMap<Menus, MenusDto>().ReverseMap();
             CreateMap<Head, HeadDto>().ReverseMap();
+            CreateMap<Head, HeadUpdateDto>().ReverseMap();
             CreateMap<App, AppDto>().ReverseMap();
         }
     }
