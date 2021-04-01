@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 
 namespace traveltech2.Models
 {
-    public class Drop
+    public class Menus
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Desc { get; set; }
+        public string Url { get; set; }
 
 
-        public int? MenuID { get; set; }
+        public int? HeadID { get; set; }
         [JsonIgnore]
-        public Menu Menu { get; set; }
+        public Head Head { get; set; }
+        public IEnumerable<MenuItems> MenuItems { get; set; }
     }
 }

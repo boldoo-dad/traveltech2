@@ -10,8 +10,8 @@ using traveltech2.Models.Data;
 namespace traveltech2.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210331045216_init2")]
-    partial class init2
+    [Migration("20210401030933_init3")]
+    partial class init3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,30 +35,7 @@ namespace traveltech2.Migrations
 
                     b.HasIndex("HeadID");
 
-                    b.ToTable("Apps");
-                });
-
-            modelBuilder.Entity("traveltech2.Models.menuItems", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Desc")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("MenuID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MenuID");
-
-                    b.ToTable("MenuItems");
+                    b.ToTable("App");
                 });
 
             modelBuilder.Entity("traveltech2.Models.Head", b =>
@@ -73,10 +50,33 @@ namespace traveltech2.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Heads");
+                    b.ToTable("Head");
                 });
 
-            modelBuilder.Entity("traveltech2.Models.Menu", b =>
+            modelBuilder.Entity("traveltech2.Models.MenuItems", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Desc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("MenusID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenusID");
+
+                    b.ToTable("MenuItems");
+                });
+
+            modelBuilder.Entity("traveltech2.Models.Menus", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -106,17 +106,17 @@ namespace traveltech2.Migrations
                         .HasForeignKey("HeadID");
                 });
 
-            modelBuilder.Entity("traveltech2.Models.menuItems", b =>
+            modelBuilder.Entity("traveltech2.Models.MenuItems", b =>
                 {
-                    b.HasOne("traveltech2.Models.Menu", "Menu")
-                        .WithMany("menuItems")
-                        .HasForeignKey("MenuID");
+                    b.HasOne("traveltech2.Models.Menus", "Menus")
+                        .WithMany("MenuItems")
+                        .HasForeignKey("MenusID");
                 });
 
-            modelBuilder.Entity("traveltech2.Models.Menu", b =>
+            modelBuilder.Entity("traveltech2.Models.Menus", b =>
                 {
                     b.HasOne("traveltech2.Models.Head", "Head")
-                        .WithMany("Menu")
+                        .WithMany("Menus")
                         .HasForeignKey("HeadID");
                 });
 #pragma warning restore 612, 618

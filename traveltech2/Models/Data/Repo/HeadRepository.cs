@@ -16,13 +16,13 @@ namespace traveltech2.Models.Data.Repo
         }
         public void addHead(Head head)
         {
-            dc.Heads.Add(head);
+            dc.Head.Add(head);
         }
 
         public void deleteHead(int headId)
         {
-            var id = dc.Heads.Find(headId);
-            dc.Heads.Remove(id);
+            var id = dc.Head.Find(headId);
+            dc.Head.Remove(id);
         }
 
         //private Head getById(int id)
@@ -34,12 +34,12 @@ namespace traveltech2.Models.Data.Repo
         {
             //return await Task.Run(()=>getById(id));
             //return await dc.Heads.FindAsync(id);
-            return await dc.Heads.Include(x => x.Menu).ThenInclude(s => s.Drop).FirstOrDefaultAsync(y => y.Id == id);
+            return await dc.Head.Include(x => x.Menus).ThenInclude(s => s.MenuItems).FirstOrDefaultAsync(y => y.Id == id);
         }
 
-        public async Task<IEnumerable<Head>> getHeadsAsync()
+        public async Task<Head> getHeadAsync()
         {
-            return await dc.Heads.Include("Menu.Drop").ToListAsync();
+            return await dc.Head.Include("Menus.MenuItems").SingleOrDefaultAsync();
         }
     }
     public interface IHeadRepository
@@ -47,6 +47,6 @@ namespace traveltech2.Models.Data.Repo
         void addHead(Head head);
         void deleteHead(int headId);
         Task<Head> findHeadAsync(int id);
-        Task<IEnumerable<Head>> getHeadsAsync();
+        Task<Head> getHeadAsync();
     }
 }

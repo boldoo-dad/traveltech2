@@ -29,115 +29,115 @@ namespace traveltech2.Controllers
             this.mapper = mapper;
             this.environment = environment;
         }
-        #region Drops
-        [HttpGet("drops")]
-        public async Task<IActionResult> GetDrops()
+        #region MenuItems
+        [HttpGet("MenuItems")]
+        public async Task<IActionResult> GetMenuItems()
         {
-            var drops = await uow.DropRepository.getDropsAsync();
-            var dropsDto = mapper.Map<IEnumerable<DropDto>>(drops);
-            return Ok(dropsDto);
+            var menuItems = await uow.MenuItemsRepository.getMenuItemsAsync();
+            var menuItemsDto = mapper.Map<IEnumerable<MenuItemsDto>>(menuItems);
+            return Ok(menuItemsDto);
         }
-        [HttpGet("drops/{id}")]
-        public async Task<IActionResult> GetDrop(int id)
+        [HttpGet("MenuItems/{id}")]
+        public async Task<IActionResult> GetMenuItems(int id)
         {
-            var dropFromDb = await uow.DropRepository.findDropAsync(id);
-            var dropDto = mapper.Map<DropDto>(dropFromDb);
-            return Ok(dropDto);
+            var menuItemFromDb = await uow.MenuItemsRepository.findMenuItemsAsync(id);
+            var menuItemDto = mapper.Map<MenuItemsDto>(menuItemFromDb);
+            return Ok(menuItemDto);
         }
-        [HttpPost("drops")]
-        public async Task<IActionResult> AddDrop(DropDto dropDto)
+        [HttpPost("MenuItems")]
+        public async Task<IActionResult> PostMenuItems(MenuItemsDto menuItemsDto)
         {
-            var drop = mapper.Map<Drop>(dropDto);
-            uow.DropRepository.addDrop(drop);
+            var menuItems = mapper.Map<MenuItems>(menuItemsDto);
+            uow.MenuItemsRepository.addMenuItems(menuItems);
             await uow.SaveAsync();
             return StatusCode(201);
         }
-        [HttpPut("drops/{id}")]
-        public async Task<IActionResult> UpdateDrop(int id, DropDto dropDto)
+        [HttpPut("MenuItems/{id}")]
+        public async Task<IActionResult> PutMenuItems(int id, MenuItemsDto menuItemsDto)
         {
-            if (id != dropDto.Id)
+            if (id != menuItemsDto.Id)
                 return BadRequest("Update not allowed");
-            var dropFromDb = await uow.DropRepository.findDropAsync(id);
-            if (dropFromDb == null)
+            var menuItemFromDb = await uow.MenuItemsRepository.findMenuItemsAsync(id);
+            if (menuItemFromDb == null)
                 return BadRequest("Update not allowed");
-            mapper.Map(dropDto, dropFromDb);
+            mapper.Map(menuItemsDto, menuItemFromDb);
             await uow.SaveAsync();
             return StatusCode(200);
         }
-        [HttpDelete("drops/{id}")]
-        public async Task<IActionResult> DeleteDrop(int id)
+        [HttpDelete("MenuItems/{id}")]
+        public async Task<IActionResult> DeleteMenuItems(int id)
         {
-            var dropFromDb = await uow.DropRepository.findDropAsync(id);
-            if (dropFromDb == null)
+            var menuItemFromDb = await uow.MenuItemsRepository.findMenuItemsAsync(id);
+            if (menuItemFromDb == null)
                 return StatusCode(204);
-            uow.DropRepository.deleteDrop(id);
+            uow.MenuItemsRepository.deleteMenuItems(id);
             await uow.SaveAsync();
             return Ok(id);
         }
         #endregion
 
         #region Menus
-        [HttpGet("menus")]
+        [HttpGet("Menus")]
         public async Task<IActionResult> GetMenus()
         {
-            var menus = await uow.MenuRepository.getMenusAsync();
-            var menusDto = mapper.Map<IEnumerable<MenuDto>>(menus);
+            var menus = await uow.MenusRepository.getMenusAsync();
+            var menusDto = mapper.Map<IEnumerable<MenusDto>>(menus);
             return Ok(menusDto);
         }
-        [HttpGet("menus/{id}")]
-        public async Task<IActionResult> GetMenu(int id)
+        [HttpGet("Menus/{id}")]
+        public async Task<IActionResult> GetMenus(int id)
         {
-            var menuFromDb = await uow.MenuRepository.findMenuAsync(id);
-            var menuDto = mapper.Map<MenuDto>(menuFromDb);
+            var menuFromDb = await uow.MenusRepository.findMenusAsync(id);
+            var menuDto = mapper.Map<MenusDto>(menuFromDb);
             return Ok(menuDto);
         }
-        [HttpPost("menus")]
-        public async Task<IActionResult> AddMenu(MenuDto menuDto)
+        [HttpPost("Menus")]
+        public async Task<IActionResult> PostMenus(MenusDto menusDto)
         {
-            var menu = mapper.Map<Menu>(menuDto);
-            uow.MenuRepository.addMenu(menu);
+            var menus = mapper.Map<Menus>(menusDto);
+            uow.MenusRepository.addMenus(menus);
             await uow.SaveAsync();
             return StatusCode(201);
         }
-        [HttpPut("menus/{id}")]
-        public async Task<IActionResult> UpdateMenu(int id, MenuDto menuDto)
+        [HttpPut("Menus/{id}")]
+        public async Task<IActionResult> PutMenus(int id, MenusDto menusDto)
         {
-            if (id != menuDto.Id)
+            if (id != menusDto.Id)
                 return BadRequest("Update not allowed");
-            var menuFromDb = await uow.MenuRepository.findMenuAsync(id);
+            var menuFromDb = await uow.MenusRepository.findMenusAsync(id);
             if (menuFromDb == null)
                 return BadRequest("Update not allowed");
-            mapper.Map(menuDto, menuFromDb);
+            mapper.Map(menusDto, menuFromDb);
             await uow.SaveAsync();
             return StatusCode(200);
         }
-        [HttpDelete("menus/{id}")]
-        public async Task<IActionResult> DeleteMenu(int id)
+        [HttpDelete("Menus/{id}")]
+        public async Task<IActionResult> DeleteMenus(int id)
         {
-            var menuFromDb = await uow.MenuRepository.findMenuAsync(id);
+            var menuFromDb = await uow.MenusRepository.findMenusAsync(id);
             if (menuFromDb == null)
                 return StatusCode(204);
-            uow.MenuRepository.deleteMenu(id);
+            uow.MenusRepository.deleteMenus(id);
             await uow.SaveAsync();
             return Ok(id);
         }
         #endregion
 
-        #region Heads
-        [HttpGet("heads")]
-        public async Task<IActionResult> GetHeads()
+        #region Head
+        [HttpGet("head")]
+        public async Task<IActionResult> GetHead()
         {
-            var heads = await uow.HeadRepository.getHeadsAsync();
-            var headsDto = mapper.Map<IEnumerable<HeadDto>>(heads.Select(m => new HeadDto()
+            var head = await uow.HeadRepository.getHeadAsync();
+            var headDto = mapper.Map<HeadDto>(new HeadDto()
             {
-                Id = m.Id,
-                Menu = m.Menu,
-                ImageName = m.ImageName,
-                ImageSrc = String.Format("{0}://{1}{2}/wwwroot/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, m.ImageName)
-            }));
-            return Ok(headsDto);
+                Id = head.Id,
+                Menus = head.Menus,
+                ImageName = head.ImageName,
+                ImageSrc = String.Format("{0}://{1}{2}/wwwroot/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, head.ImageName)
+            });
+            return Ok(headDto);
         }
-        [HttpGet("heads/{id}")]
+        [HttpGet("head/{id}")]
         public async Task<IActionResult> GetHead(int id)
         {
             var headFromDb = await uow.HeadRepository.findHeadAsync(id);
@@ -147,7 +147,7 @@ namespace traveltech2.Controllers
             var headsDto = mapper.Map<HeadDto>(headFromDb);
             return Ok(headsDto);
         }
-        [HttpPost("heads")]
+        [HttpPost("head")]
         public async Task<IActionResult> PostHead([FromForm] HeadDto headDto)
         {
             var head = mapper.Map<Head>(headDto);
@@ -157,7 +157,7 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return StatusCode(201);
         }
-        [HttpPut("heads/{id}")]
+        [HttpPut("head/{id}")]
         public async Task<IActionResult> PutHead(int id, [FromForm] HeadDto headDto)
         {
             if (id != headDto.Id)
@@ -176,7 +176,7 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return StatusCode(200);
         }
-        [HttpPatch("heads/{id}")]
+        [HttpPatch("head/{id}")]
         public async Task<IActionResult> PatchHead(int id, JsonPatchDocument<Head> headToPatch)
         {
             var headFromDb = await uow.HeadRepository.findHeadAsync(id);
@@ -185,7 +185,7 @@ namespace traveltech2.Controllers
             return StatusCode(200);
         }
 
-        [HttpDelete("heads/{id}")]
+        [HttpDelete("head/{id}")]
         public async Task<IActionResult> DeleteHead(int id)
         {
             var headFromDb = await uow.HeadRepository.findHeadAsync(id);
@@ -198,6 +198,16 @@ namespace traveltech2.Controllers
             return Ok(id);
         }
 
+        #endregion
+
+        #region App
+        [HttpGet]
+        public async Task<IActionResult> GetApp()
+        {
+            var app = await uow.AppRepository.getAppAsync();
+            var appDto = mapper.Map<AppDto>(app);
+            return Ok(appDto);
+        }
         #endregion
 
         #region Image

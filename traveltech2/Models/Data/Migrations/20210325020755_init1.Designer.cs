@@ -38,7 +38,7 @@ namespace traveltech2.Migrations
                     b.ToTable("Apps");
                 });
 
-            modelBuilder.Entity("traveltech2.Models.Drop", b =>
+            modelBuilder.Entity("traveltech2.Models.menuItems", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,7 +58,7 @@ namespace traveltech2.Migrations
 
                     b.HasIndex("MenuID");
 
-                    b.ToTable("Drops");
+                    b.ToTable("MenuItems");
                 });
 
             modelBuilder.Entity("traveltech2.Models.Head", b =>
@@ -103,10 +103,10 @@ namespace traveltech2.Migrations
                         .HasForeignKey("HeadID");
                 });
 
-            modelBuilder.Entity("traveltech2.Models.Drop", b =>
+            modelBuilder.Entity("traveltech2.Models.menuItems", b =>
                 {
                     b.HasOne("traveltech2.Models.Menu", "Menu")
-                        .WithMany("Drop")
+                        .WithMany("menuItems")
                         .HasForeignKey("MenuID");
                 });
 

@@ -7,9 +7,9 @@ namespace traveltech2.Models.Data
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
-        public DbSet<App> Apps { get; set; }
-        public DbSet<Head> Heads { get; set; }
-        public DbSet<Menu> Menus { get; set; }
-        public DbSet<Drop> Drops { get; set; }
+        public DbSet<App> App { get; set; }
+        public DbSet<Head> Head { get; set; }
+        public DbSet<Menus> Menus { get; set; }
+        public DbSet<MenuItems> MenuItems { get; set; }
     }
 }

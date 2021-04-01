@@ -14,14 +14,17 @@ namespace traveltech2.Models.Data
         {
             this.dc = dc;
         }
-        public IDropRepository DropRepository =>
-            new DropRepository(dc);
+        public IMenuItemsRepository MenuItemsRepository =>
+            new Repo.MenuItemsRepository(dc);
 
-        public IMenuRepository MenuRepository =>
-            new MenuRepository(dc);
+        public IMenusRepository MenusRepository =>
+            new MenusRepository(dc);
 
         public IHeadRepository HeadRepository =>
             new HeadRepository(dc);
+
+        public IAppRepository AppRepository =>
+            new AppRepository(dc);
 
         public async Task<bool> SaveAsync()
         {
@@ -30,9 +33,10 @@ namespace traveltech2.Models.Data
     }
     public interface IUnitOfWork
     {
-        public IDropRepository DropRepository { get; }
-        public IMenuRepository MenuRepository { get; }
+        public IMenuItemsRepository MenuItemsRepository { get; }
+        public IMenusRepository MenusRepository { get; }
         public IHeadRepository HeadRepository { get; }
+        public IAppRepository AppRepository { get; }
         Task<bool> SaveAsync();
     }
 }

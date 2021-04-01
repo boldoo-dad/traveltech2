@@ -13,6 +13,6 @@ namespace traveltech2.Models
         [NotMapped]
         public string ImageSrc { get; set; }
 
-        public IEnumerable<Menu> Menu { get; set; }
+        public IEnumerable<Menus> Menus { get; set; }
     }
 }

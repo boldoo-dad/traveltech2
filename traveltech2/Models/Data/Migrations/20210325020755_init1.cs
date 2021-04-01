@@ -59,7 +59,7 @@ namespace traveltech2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Drops",
+                name: "MenuItems",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -70,9 +70,9 @@ namespace traveltech2.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Drops", x => x.Id);
+                    table.PrimaryKey("PK_MenuItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Drops_Menus_MenuID",
+                        name: "FK_MenuItems_Menus_MenuID",
                         column: x => x.MenuID,
                         principalTable: "Menus",
                         principalColumn: "Id",
@@ -85,8 +85,8 @@ namespace traveltech2.Migrations
                 column: "HeadID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Drops_MenuID",
-                table: "Drops",
+                name: "IX_MenuItems_MenuID",
+                table: "MenuItems",
                 column: "MenuID");
 
             migrationBuilder.CreateIndex(
@@ -97,17 +97,7 @@ namespace traveltech2.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Apps");
-
-            migrationBuilder.DropTable(
-                name: "Drops");
-
-            migrationBuilder.DropTable(
-                name: "Menus");
-
-            migrationBuilder.DropTable(
-                name: "Heads");
+           
         }
     }
 }

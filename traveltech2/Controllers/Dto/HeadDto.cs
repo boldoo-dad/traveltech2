@@ -18,6 +18,6 @@ namespace traveltech2.Controllers.Dto
         [NotMapped]
         public IFormFile ImageFile { get; set; }
 
-        public IEnumerable<Menu> Menu { get; set; }
+        public IEnumerable<Menus> Menus { get; set; }
     }
 }

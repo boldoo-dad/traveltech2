@@ -14,9 +14,7 @@ namespace traveltech2.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ImageName",
-                table: "Heads");
+            
         }
     }
 }
