@@ -11,6 +11,9 @@ namespace traveltech2.Controllers.Dto.Helpers
     {
         public AutoMapperProfiles()
         {
+            CreateMap<Links, LinksUpdateDto>().ReverseMap();
+            CreateMap<Links, LinksDto>().ReverseMap();
+            CreateMap<MenuItems, MenuItemsUpdateDto>().ReverseMap();
             CreateMap<MenuItems, MenuItemsDto>().ReverseMap();
             CreateMap<Menus, MenusDto>().ReverseMap();
             CreateMap<Head, HeadDto>().ReverseMap();

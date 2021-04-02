@@ -34,12 +34,12 @@ namespace traveltech2.Models.Data.Repo
         {
             //return await Task.Run(()=>getById(id));
             //return await dc.Heads.FindAsync(id);
-            return await dc.Head.Include(x => x.Menus).ThenInclude(s => s.MenuItems).FirstOrDefaultAsync(y => y.Id == id);
+            return await dc.Head.Include(x => x.Menus).ThenInclude(s => s.MenuItems).ThenInclude(x=>x.Links).FirstOrDefaultAsync(y => y.Id == id);
         }
 
         public async Task<Head> getHeadAsync()
         {
-            return await dc.Head.Include("Menus.MenuItems").SingleOrDefaultAsync();
+            return await dc.Head.Include("Menus.MenuItems.Links").FirstOrDefaultAsync();
         }
     }
     public interface IHeadRepository

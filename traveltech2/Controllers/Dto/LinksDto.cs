@@ -7,12 +7,12 @@ using traveltech2.Models;
 
 namespace traveltech2.Controllers.Dto
 {
-    public class MenuItemsDto
+    public class LinksDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Desc { get; set; }
-        public int? MenusID { get; set; }
-        public IEnumerable<LinksDto> Links { get; set; }
+        public string Url { get; set; }
+        [JsonIgnore]
+        public IEnumerable<MenuItems> MenuItems { get; set; }
     }
 }

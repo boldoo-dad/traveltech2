@@ -26,6 +26,9 @@ namespace traveltech2.Models.Data
         public IAppRepository AppRepository =>
             new AppRepository(dc);
 
+        public ILinksRepository LinksRepository =>
+            new LinksRepository(dc);
+
         public async Task<bool> SaveAsync()
         {
             return await dc.SaveChangesAsync() > 0;
@@ -33,6 +36,7 @@ namespace traveltech2.Models.Data
     }
     public interface IUnitOfWork
     {
+        public ILinksRepository LinksRepository { get; }
         public IMenuItemsRepository MenuItemsRepository { get; }
         public IMenusRepository MenusRepository { get; }
         public IHeadRepository HeadRepository { get; }

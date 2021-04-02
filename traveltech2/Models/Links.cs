@@ -1,27 +1,21 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace traveltech2.Models
 {
-    public class MenuItems
+    public class Links
     {
      
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Desc { get; set; }
+        public string Url { get; set; }
 
 
-
-
-
-
-        public int? MenusID { get; set; }
         [JsonIgnore]
-        public Menus Menus { get; set; }
-        public IEnumerable<Links> Links { get; set; }
+        public IEnumerable<MenuItems> MenuItems { get; set; }
     }
 }

@@ -23,12 +23,73 @@ namespace traveltech2.Controllers
         private readonly IMapper mapper;
         private readonly IWebHostEnvironment environment;
 
-        public AppController(IUnitOfWork uow, IMapper mapper, IWebHostEnvironment environment)
+        public AppController(IUnitOfWork uow,
+                             IMapper mapper,
+                             IWebHostEnvironment environment)
         {
             this.uow = uow;
             this.mapper = mapper;
             this.environment = environment;
         }
+        #region Links
+        [HttpGet("Links")]
+        public async Task<IActionResult> GetLinks()
+        {
+            var links = await uow.LinksRepository.getLinksAsync();
+            var linksDto = mapper.Map<IEnumerable<LinksDto>>(links);
+            return Ok(linksDto);
+        }
+        [HttpGet("Links/{id}")]
+        public async Task<IActionResult> GetLink(int id)
+        {
+            var linksFromDb = await uow.LinksRepository.findLinksAsync(id);
+            var linksDto = mapper.Map<LinksDto>(linksFromDb);
+            return Ok(linksDto);
+        }
+        [HttpPost("Links")]
+        public async Task<IActionResult> PostLinks(LinksDto linksDto)
+        {
+            var links = mapper.Map<Links>(linksDto);
+            uow.LinksRepository.addLinks(links);
+            await uow.SaveAsync();
+            return StatusCode(201);
+        }
+        [HttpPut("Links/{id}")]
+        public async Task<IActionResult> PutLinks(int id, LinksDto linksDto)
+        {
+            if (id != linksDto.Id)
+                return BadRequest("Update not allowed");
+            var linksFromDb = await uow.LinksRepository.findLinksAsync(id);
+            if (linksFromDb == null)
+                return BadRequest("Update not allowed");
+            mapper.Map(linksDto, linksFromDb);
+            await uow.SaveAsync();
+            return StatusCode(200);
+        }
+        [HttpPut("LinksUpdate/{id}")]
+        public async Task<IActionResult> PutLinks(int id, LinksUpdateDto linksUpdateDto)
+        {
+            if (id != linksUpdateDto.Id)
+                return BadRequest("Update not allowed");
+            var linksFromDb = await uow.LinksRepository.findLinksAsync(id);
+            if (linksFromDb == null)
+                return BadRequest("Update not allowed");
+            mapper.Map(linksUpdateDto, linksFromDb);
+            await uow.SaveAsync();
+            return StatusCode(200);
+        }
+        [HttpDelete("Links/{id}")]
+        public async Task<IActionResult> DeleteLinks(int id)
+        {
+            var linksFromDb = await uow.LinksRepository.findLinksAsync(id);
+            if (linksFromDb == null)
+                return StatusCode(204);
+            uow.LinksRepository.deleteLinks(id);
+            await uow.SaveAsync();
+            return Ok(id);
+        }
+        #endregion
+
         #region MenuItems
         [HttpGet("MenuItems")]
         public async Task<IActionResult> GetMenuItems()
@@ -53,14 +114,14 @@ namespace traveltech2.Controllers
             return StatusCode(201);
         }
         [HttpPut("MenuItems/{id}")]
-        public async Task<IActionResult> PutMenuItems(int id, MenuItemsDto menuItemsDto)
+        public async Task<IActionResult> PutMenuItems(int id, MenuItemsUpdateDto menuItemsUpdateDto)
         {
-            if (id != menuItemsDto.Id)
+            if (id != menuItemsUpdateDto.Id)
                 return BadRequest("Update not allowed");
             var menuItemFromDb = await uow.MenuItemsRepository.findMenuItemsAsync(id);
             if (menuItemFromDb == null)
                 return BadRequest("Update not allowed");
-            mapper.Map(menuItemsDto, menuItemFromDb);
+            mapper.Map(menuItemsUpdateDto, menuItemFromDb);
             await uow.SaveAsync();
             return StatusCode(200);
         }
@@ -137,26 +198,6 @@ namespace traveltech2.Controllers
             });
             return Ok(headDto);
         }
-        //[HttpGet("head/{id}")]
-        //public async Task<IActionResult> GetHead(int id)
-        //{
-        //    var headFromDb = await uow.HeadRepository.findHeadAsync(id);
-        //    if (headFromDb == null)
-        //        return StatusCode(204);
-        //    headFromDb.ImageSrc = String.Format("{0}://{1}{2}/wwwroot/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, headFromDb.ImageName);
-        //    var headsDto = mapper.Map<HeadDto>(headFromDb);
-        //    return Ok(headsDto);
-        //}
-        //[HttpPost("head")]
-        //public async Task<IActionResult> PostHead([FromForm] HeadDto headDto)
-        //{
-        //    var head = mapper.Map<Head>(headDto);
-        //    if (headDto.ImageFile != null)
-        //        head.ImageName = await ImageUploadAsync(headDto.ImageFile);
-        //    uow.HeadRepository.addHead(head);
-        //    await uow.SaveAsync();
-        //    return StatusCode(201);
-        //}
         [HttpPut("head/{id}")]
         public async Task<IActionResult> PutHead(int id, [FromForm] HeadDto headDto)
         {
