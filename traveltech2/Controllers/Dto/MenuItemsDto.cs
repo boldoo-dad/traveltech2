@@ -13,6 +13,6 @@ namespace traveltech2.Controllers.Dto
         public string Name { get; set; }
         public string Desc { get; set; }
         public int? MenusID { get; set; }
-        public IEnumerable<LinksDto> Links { get; set; }
+        public IList<LinksDto> Links { get; set; }
     }
 }

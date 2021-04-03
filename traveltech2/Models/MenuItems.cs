@@ -22,6 +22,6 @@ namespace traveltech2.Models
         public int? MenusID { get; set; }
         [JsonIgnore]
         public Menus Menus { get; set; }
-        public IEnumerable<Links> Links { get; set; }
+        public IList<Links> Links { get; set; }
     }
 }

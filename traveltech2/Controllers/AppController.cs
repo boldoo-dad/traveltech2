@@ -108,16 +108,49 @@ namespace traveltech2.Controllers
         [HttpPost("MenuItems")]
         public async Task<IActionResult> PostMenuItems(MenuItemsDto menuItemsDto)
         {
+            var linksFromDto = menuItemsDto.Links;
+            menuItemsDto.Links = new List<LinksDto>();
+
             var menuItems = mapper.Map<MenuItems>(menuItemsDto);
             uow.MenuItemsRepository.addMenuItems(menuItems);
+            //await uow.SaveAsync();
+
+            foreach (var link in linksFromDto)
+            {
+                var link1 = uow.LinksRepository.findLinksAsync(link.Id).Result;
+                menuItems.Links.Add(link1);
+                link1.MenuItems.Add(menuItems);
+            }
             await uow.SaveAsync();
+
             return StatusCode(201);
         }
         [HttpPut("MenuItems/{id}")]
+        public async Task<IActionResult> PutMenuItems(int id, MenuItemsDto menuItemsDto)
+        {
+            if (id != menuItemsDto.Id)
+                return BadRequest("Update not allowed");
+            var menuItemFromDb = await uow.MenuItemsRepository.findMenuItemsAsync(id);
+            if (menuItemFromDb == null)
+                return BadRequest("Update not allowed");
+
+            var linksFromDto = menuItemsDto.Links;
+            menuItemsDto.Links = new List<LinksDto>();
+
+            var menuItems = mapper.Map(menuItemsDto, menuItemFromDb);
+            foreach (var link in linksFromDto)
+            {
+                var link1 = uow.LinksRepository.findLinksAsync(link.Id).Result;
+                menuItems.Links.Add(link1);
+                link1.MenuItems.Add(menuItems);
+            }
+            await uow.SaveAsync();
+            return StatusCode(200);
+        }
+
+        [HttpPut("MenuItemsUpdate/{id}")]
         public async Task<IActionResult> PutMenuItems(int id, MenuItemsUpdateDto menuItemsUpdateDto)
         {
-            if (id != menuItemsUpdateDto.Id)
-                return BadRequest("Update not allowed");
             var menuItemFromDb = await uow.MenuItemsRepository.findMenuItemsAsync(id);
             if (menuItemFromDb == null)
                 return BadRequest("Update not allowed");

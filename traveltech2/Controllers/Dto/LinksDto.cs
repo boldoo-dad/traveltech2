@@ -13,6 +13,6 @@ namespace traveltech2.Controllers.Dto
         public string Name { get; set; }
         public string Url { get; set; }
         [JsonIgnore]
-        public IEnumerable<MenuItems> MenuItems { get; set; }
+        public IList<MenuItems> MenuItems { get; set; }
     }
 }

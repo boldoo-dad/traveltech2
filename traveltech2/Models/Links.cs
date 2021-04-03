@@ -16,6 +16,6 @@ namespace traveltech2.Models
 
 
         [JsonIgnore]
-        public IEnumerable<MenuItems> MenuItems { get; set; }
+        public IList<MenuItems> MenuItems { get; set; }
     }
 }
