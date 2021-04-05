@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace traveltech2.Models
 {
-    public class App
+    public class FooterMenus
     {
         public int Id { get; set; }
-        public int? HeadID { get; set; }
-        public Head Head { get; set; }
-
+        public string Name { get; set; }
         public int? FooterID { get; set; }
+        [JsonIgnore]
         public Footer Footer { get; set; }
+        public IList<Links> Links { get; set; }
     }
+
 }

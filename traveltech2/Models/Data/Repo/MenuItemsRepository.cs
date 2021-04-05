@@ -27,7 +27,7 @@ namespace traveltech2.Models.Data.Repo
 
         public async Task<MenuItems> findMenuItemsAsync(int id)
         {
-            return await dc.MenuItems.FindAsync(id);
+           return await dc.MenuItems.Include(m => m.Links).FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public async Task<IEnumerable<MenuItems>> getMenuItemsAsync()

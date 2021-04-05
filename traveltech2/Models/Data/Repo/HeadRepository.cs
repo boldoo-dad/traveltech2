@@ -33,8 +33,9 @@ namespace traveltech2.Models.Data.Repo
         public async Task<Head> findHeadAsync(int id)
         {
             //return await Task.Run(()=>getById(id));
-            //return await dc.Heads.FindAsync(id);
-            return await dc.Head.Include(x => x.Menus).ThenInclude(s => s.MenuItems).ThenInclude(x=>x.Links).FirstOrDefaultAsync(y => y.Id == id);
+            //return await dc.Heads.Include(x => x.Menus).FindAsync(id);
+          //  return await dc.Head.Include(x => x.Menus).ThenInclude(s => s.MenuItems).ThenInclude(x=>x.Links).FirstOrDefaultAsync(y => y.Id == id);
+            return await dc.Head.Include("Menus.MenuItems.Links").FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public async Task<Head> getHeadAsync()

@@ -12,5 +12,8 @@ namespace traveltech2.Models.Data
         public DbSet<Menus> Menus { get; set; }
         public DbSet<MenuItems> MenuItems { get; set; }
         public DbSet<Links> Links { get; set; }
+        public DbSet<Footer> Footer { get; set; }
+        public DbSet<FooterIcons> FooterIcons { get; set; }
+        public DbSet<FooterMenus> FooterMenus { get; set; }
     }
 }

@@ -28,6 +28,11 @@ namespace traveltech2.Models.Data
 
         public ILinksRepository LinksRepository =>
             new LinksRepository(dc);
+        public IFooterRepository FooterRepository =>
+            new FooterRepository(dc);
+
+        public IFooterIconsRepository FooterIconsRepository =>
+            new FooterIconsRepository(dc);
 
         public async Task<bool> SaveAsync()
         {
@@ -36,6 +41,8 @@ namespace traveltech2.Models.Data
     }
     public interface IUnitOfWork
     {
+        public IFooterIconsRepository FooterIconsRepository { get; }
+        public IFooterRepository FooterRepository { get; }
         public ILinksRepository LinksRepository { get; }
         public IMenuItemsRepository MenuItemsRepository { get; }
         public IMenusRepository MenusRepository { get; }

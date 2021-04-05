@@ -1,24 +1,22 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace traveltech2.Models
 {
-    public class Links
+    public class FooterIcons
     {
-     
         public int Id { get; set; }
-        public string Name { get; set; }
         public string Url { get; set; }
-
-
+        public string ImageName { get; set; }
+        [NotMapped]
+        public string ImageSrc { get; set; }
+        public int? FooterID { get; set; }
         [JsonIgnore]
-        public IList<MenuItems> MenuItems { get; set; }
+        public Footer Footer { get; set; }
 
-        [JsonIgnore]
-        public IList<FooterMenus> FooterMenus { get; set; }
     }
 }

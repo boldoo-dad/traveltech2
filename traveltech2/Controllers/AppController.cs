@@ -31,6 +31,85 @@ namespace traveltech2.Controllers
             this.mapper = mapper;
             this.environment = environment;
         }
+
+        #region FooterIcons
+        [HttpGet("FooterIcons")]
+        public async Task<IActionResult> GetFooterIcons()
+        {
+            var footerIcons = await uow.FooterIconsRepository.getFooterIconsAsync();
+            var footerIconsDto = mapper.Map<IList<FooterIconsDto>>(footerIcons.Select(m => new FooterIconsDto()
+            {
+                Id = m.Id,
+                ImageName = m.ImageName,
+                ImageSrc = String.Format("{0}://{1}{2}/wwwroot/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, m.ImageName)
+            }));
+            return Ok(footerIconsDto);
+        }
+        [HttpPost("FooterIcons")]
+        public async Task<IActionResult> PostFooterIcons([FromForm] FooterIconsDto footerIconsDto)
+        {
+            var footerIcons = mapper.Map<FooterIcons>(footerIconsDto);
+            if (footerIconsDto.ImageFile != null)
+                footerIcons.ImageName = await ImageUploadAsync(footerIconsDto.ImageFile);
+            uow.FooterIconsRepository.addFooterIcons(footerIcons);
+            await uow.SaveAsync();
+            return StatusCode(201);
+        }
+        [HttpPut("FooterIcons/{id}")]
+        public async Task<IActionResult> PutFooterIcons(int id, [FromForm] FooterIconsDto footerIconsDto)
+        {
+            if (id != footerIconsDto.Id)
+                return BadRequest("Update not allowed");
+            var footerIconsFromDb = await uow.FooterIconsRepository.findfFooterIconsAsync(id);
+            if (footerIconsFromDb == null)
+                return BadRequest("Update not allowed");
+            if (footerIconsDto.ImageFile != null)
+            {
+                if (footerIconsFromDb.ImageName != null)
+                    ImageDelete(footerIconsFromDb.ImageName);
+                footerIconsFromDb.ImageName = await ImageUploadAsync(footerIconsDto.ImageFile);
+                footerIconsDto.ImageName = footerIconsFromDb.ImageName;
+            }
+            mapper.Map(footerIconsDto, footerIconsFromDb);
+            await uow.SaveAsync();
+            return StatusCode(200);
+        }
+        [HttpDelete("FooterIcons/{id}")]
+        public async Task<IActionResult> DeleteFooterIcons(int id)
+        {
+            var footerIconsFromDb = await uow.FooterIconsRepository.findfFooterIconsAsync(id);
+            if (footerIconsFromDb == null)
+                return StatusCode(204);
+            if (footerIconsFromDb.ImageName != null)
+                ImageDelete(footerIconsFromDb.ImageName);
+            uow.FooterIconsRepository.deleteFooterIcons(id);
+            await uow.SaveAsync();
+            return Ok(id);
+        }
+        #endregion
+
+        #region Footer
+        [HttpGet("Footer")]
+        public async Task<IActionResult> GetFooter()
+        {
+            var footer = await uow.FooterRepository.getFooterAsync();
+            var footerDto = mapper.Map<FooterDto>(footer);
+            return Ok(footerDto);
+        }
+        [HttpPut("Footer/{id}")]
+        public async Task<IActionResult> PutFooter(int id, FooterUpdateDto footerUpdateDto)
+        {
+            if (id != footerUpdateDto.Id)
+                return BadRequest("Update not allowed");
+            var footerFromDb = await uow.FooterRepository.findFooterAsync(id);
+            if (footerFromDb == null)
+                return BadRequest("Update not allowed");
+            mapper.Map(footerUpdateDto, footerFromDb);
+            await uow.SaveAsync();
+            return StatusCode(200);
+        }
+        #endregion
+
         #region Links
         [HttpGet("Links")]
         public async Task<IActionResult> GetLinks()
@@ -148,16 +227,16 @@ namespace traveltech2.Controllers
             return StatusCode(200);
         }
 
-        [HttpPut("MenuItemsUpdate/{id}")]
-        public async Task<IActionResult> PutMenuItems(int id, MenuItemsUpdateDto menuItemsUpdateDto)
-        {
-            var menuItemFromDb = await uow.MenuItemsRepository.findMenuItemsAsync(id);
-            if (menuItemFromDb == null)
-                return BadRequest("Update not allowed");
-            mapper.Map(menuItemsUpdateDto, menuItemFromDb);
-            await uow.SaveAsync();
-            return StatusCode(200);
-        }
+        //[HttpPut("MenuItemsUpdate/{id}")]
+        //public async Task<IActionResult> PutMenuItems(int id, MenuItemsUpdateDto menuItemsUpdateDto)
+        //{
+        //    var menuItemFromDb = await uow.MenuItemsRepository.findMenuItemsAsync(id);
+        //    if (menuItemFromDb == null)
+        //        return BadRequest("Update not allowed");
+        //    mapper.Map(menuItemsUpdateDto, menuItemFromDb);
+        //    await uow.SaveAsync();
+        //    return StatusCode(200);
+        //}
         [HttpDelete("MenuItems/{id}")]
         public async Task<IActionResult> DeleteMenuItems(int id)
         {
@@ -232,25 +311,6 @@ namespace traveltech2.Controllers
             return Ok(headDto);
         }
         [HttpPut("head/{id}")]
-        public async Task<IActionResult> PutHead(int id, [FromForm] HeadDto headDto)
-        {
-            if (id != headDto.Id)
-                return BadRequest("Update not allowed");
-            var headFromDb = await uow.HeadRepository.findHeadAsync(id);
-            if (headFromDb == null)
-                return BadRequest("Update not allowed");
-            if (headDto.ImageFile != null)
-            {
-                if (headFromDb.ImageName != null)
-                    ImageDelete(headFromDb.ImageName);
-                headFromDb.ImageName = await ImageUploadAsync(headDto.ImageFile);
-                headDto.ImageName = headFromDb.ImageName;
-            }
-            mapper.Map(headDto, headFromDb);
-            await uow.SaveAsync();
-            return StatusCode(200);
-        }
-        [HttpPut("headUpdate/{id}")]
         public async Task<IActionResult> PutHead(int id, [FromForm] HeadUpdateDto headDto)
         {
             if (id != headDto.Id)
@@ -269,27 +329,6 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return StatusCode(200);
         }
-        //[HttpPatch("head/{id}")]
-        //public async Task<IActionResult> PatchHead(int id, JsonPatchDocument<Head> headToPatch)
-        //{
-        //    var headFromDb = await uow.HeadRepository.findHeadAsync(id);
-        //    headToPatch.ApplyTo(headFromDb, ModelState);
-        //    await uow.SaveAsync();
-        //    return StatusCode(200);
-        //}
-
-        //[HttpDelete("head/{id}")]
-        //public async Task<IActionResult> DeleteHead(int id)
-        //{
-        //    var headFromDb = await uow.HeadRepository.findHeadAsync(id);
-        //    if (headFromDb == null)
-        //        return StatusCode(204);
-        //    if (headFromDb.ImageName != null)
-        //        ImageDelete(headFromDb.ImageName);
-        //    uow.HeadRepository.deleteHead(id);
-        //    await uow.SaveAsync();
-        //    return Ok(id);
-        //}
         #endregion
 
         #region App
