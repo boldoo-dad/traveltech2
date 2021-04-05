@@ -45,6 +45,14 @@ namespace traveltech2.Controllers
             }));
             return Ok(footerIconsDto);
         }
+        [HttpGet("FooterIcons/{id}")]
+        public async Task<IActionResult> GetFooterIcon(int id)
+        {
+            var footerIconsFromDb = await uow.FooterIconsRepository.findfFooterIconsAsync(id);
+            footerIconsFromDb.ImageSrc = String.Format("{0}://{1}{2}/wwwroot/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, footerIconsFromDb.ImageName);
+            var footerIconsDto = mapper.Map<FooterIconsDto>(footerIconsFromDb);
+            return Ok(footerIconsDto);
+        }
         [HttpPost("FooterIcons")]
         public async Task<IActionResult> PostFooterIcons([FromForm] FooterIconsDto footerIconsDto)
         {
