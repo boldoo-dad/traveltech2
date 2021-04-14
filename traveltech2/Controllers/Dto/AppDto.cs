@@ -9,5 +9,6 @@ namespace traveltech2.Controllers.Dto
     {
         public int Id { get; set; }
         public int? HeadID { get; set; }
+        public int? FooterID { get; set; }
     }
 }

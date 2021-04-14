@@ -32,6 +32,76 @@ namespace traveltech2.Controllers
             this.environment = environment;
         }
 
+        #region FooterMenus
+        [HttpGet("FooterMenus")]
+        public async Task<IActionResult> GetFooterMenus()
+        {
+            var footerMenus = await uow.FooterMenusRepository.getFooterMenusAsync();
+            var footerMenusDto = mapper.Map<IEnumerable<FooterMenusDto>>(footerMenus);
+            return Ok(footerMenusDto);
+        }
+        [HttpGet("FooterMenus/{id}")]
+        public async Task<IActionResult> GetFooterMenus(int id)
+        {
+            var footerMenuFromDb = await uow.FooterMenusRepository.findfFooterMenusAsync(id);
+            var footerMenuDto = mapper.Map<FooterMenusDto>(footerMenuFromDb);
+            return Ok(footerMenuDto);
+        }
+        [HttpPost("FooterMenus")]
+        public async Task<IActionResult> PostFooterMenus(FooterMenusDto footerMenusDto)
+        {
+            var linksFromDto = footerMenusDto.Links;
+            footerMenusDto.Links = new List<LinksDto>();
+
+
+            var footerMenus = mapper.Map<FooterMenus>(footerMenusDto);
+            uow.FooterMenusRepository.addFooterMenus(footerMenus);
+
+            foreach (var link in linksFromDto)
+            {
+                var link1 = uow.LinksRepository.findLinksAsync(link.Id).Result;
+                footerMenus.Links.Add(link1);
+                link1.FooterMenus.Add(footerMenus);
+            }
+            await uow.SaveAsync();
+
+            return StatusCode(201);
+        }
+        [HttpPut("FooterMenus/{id}")]
+        public async Task<IActionResult> PutMenuItems(int id, FooterMenusDto footerMenusDto)
+        {
+            if (id != footerMenusDto.Id)
+                return BadRequest("Update not allowed");
+            var footermenuFromDb = await uow.FooterMenusRepository.findfFooterMenusAsync(id);
+            if (footermenuFromDb == null)
+                return BadRequest("Update not allowed");
+
+            var linksFromDto = footerMenusDto.Links;
+            footerMenusDto.Links = new List<LinksDto>();
+
+            var footerMenus = mapper.Map(footerMenusDto, footermenuFromDb);
+            foreach (var link in linksFromDto)
+            {
+                var link1 = uow.LinksRepository.findLinksAsync(link.Id).Result;
+                footerMenus.Links.Add(link1);
+                link1.FooterMenus.Add(footerMenus);
+            }
+            await uow.SaveAsync();
+            return StatusCode(200);
+        }
+        [HttpDelete("FooterMenus/{id}")]
+        public async Task<IActionResult> DeleteFooterMenus(int id)
+        {
+            var footerMenuFromDb = await uow.FooterMenusRepository.findfFooterMenusAsync(id);
+            if (footerMenuFromDb == null)
+                return StatusCode(204);
+            uow.FooterMenusRepository.deleteFooterMenus(id);
+            await uow.SaveAsync();
+            return Ok(id);
+        }
+        #endregion
+
+
         #region FooterIcons
         [HttpGet("FooterIcons")]
         public async Task<IActionResult> GetFooterIcons()
@@ -40,6 +110,8 @@ namespace traveltech2.Controllers
             var footerIconsDto = mapper.Map<IList<FooterIconsDto>>(footerIcons.Select(m => new FooterIconsDto()
             {
                 Id = m.Id,
+                Url = m.Url,
+                FooterID = m.FooterID,
                 ImageName = m.ImageName,
                 ImageSrc = String.Format("{0}://{1}{2}/wwwroot/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, m.ImageName)
             }));
@@ -200,7 +272,6 @@ namespace traveltech2.Controllers
 
             var menuItems = mapper.Map<MenuItems>(menuItemsDto);
             uow.MenuItemsRepository.addMenuItems(menuItems);
-            //await uow.SaveAsync();
 
             foreach (var link in linksFromDto)
             {
@@ -234,17 +305,6 @@ namespace traveltech2.Controllers
             await uow.SaveAsync();
             return StatusCode(200);
         }
-
-        //[HttpPut("MenuItemsUpdate/{id}")]
-        //public async Task<IActionResult> PutMenuItems(int id, MenuItemsUpdateDto menuItemsUpdateDto)
-        //{
-        //    var menuItemFromDb = await uow.MenuItemsRepository.findMenuItemsAsync(id);
-        //    if (menuItemFromDb == null)
-        //        return BadRequest("Update not allowed");
-        //    mapper.Map(menuItemsUpdateDto, menuItemFromDb);
-        //    await uow.SaveAsync();
-        //    return StatusCode(200);
-        //}
         [HttpDelete("MenuItems/{id}")]
         public async Task<IActionResult> DeleteMenuItems(int id)
         {
