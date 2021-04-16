@@ -28,11 +28,11 @@ namespace traveltech2.Models.Data.Repo
 
         public async Task<Links> findLinksAsync(int id)
         {
-            return await dc.Links.Include(x => x.MenuItems).FirstOrDefaultAsync(y => y.Id == id);
+            return await dc.Links.Include(x => x.MenuItems).Include(m => m.FooterMenus).FirstOrDefaultAsync(y => y.Id == id);
         }
         public async Task<IEnumerable<Links>> getLinksAsync()
         {
-            return await dc.Links.Include(m => m.MenuItems).ToListAsync();
+            return await dc.Links.Include(m => m.MenuItems).Include(m => m.FooterMenus).ToListAsync();
         }
     }
 
