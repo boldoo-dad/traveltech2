@@ -15,9 +15,7 @@ namespace traveltech2.Controllers.Dto.Helpers
             CreateMap<FooterIcons, FooterIconsDto>().ReverseMap();
             CreateMap<Footer, FooterUpdateDto>().ReverseMap();
             CreateMap<Footer, FooterDto>().ReverseMap();
-            CreateMap<Links, LinksUpdateDto>().ReverseMap();
             CreateMap<Links, LinksDto>().ReverseMap();
-            CreateMap<MenuItems, MenuItemsUpdateDto>().ReverseMap();
             CreateMap<MenuItems, MenuItemsDto>().ReverseMap();
             CreateMap<Menus, MenusDto>().ReverseMap();
             CreateMap<Head, HeadDto>().ReverseMap();

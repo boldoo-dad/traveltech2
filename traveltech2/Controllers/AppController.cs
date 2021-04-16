@@ -101,7 +101,6 @@ namespace traveltech2.Controllers
         }
         #endregion
 
-
         #region FooterIcons
         [HttpGet("FooterIcons")]
         public async Task<IActionResult> GetFooterIcons()
@@ -222,18 +221,6 @@ namespace traveltech2.Controllers
             if (linksFromDb == null)
                 return BadRequest("Update not allowed");
             mapper.Map(linksDto, linksFromDb);
-            await uow.SaveAsync();
-            return StatusCode(200);
-        }
-        [HttpPut("LinksUpdate/{id}")]
-        public async Task<IActionResult> PutLinks(int id, LinksUpdateDto linksUpdateDto)
-        {
-            if (id != linksUpdateDto.Id)
-                return BadRequest("Update not allowed");
-            var linksFromDb = await uow.LinksRepository.findLinksAsync(id);
-            if (linksFromDb == null)
-                return BadRequest("Update not allowed");
-            mapper.Map(linksUpdateDto, linksFromDb);
             await uow.SaveAsync();
             return StatusCode(200);
         }
