@@ -28,14 +28,18 @@ namespace traveltech2.Models.Data.Repo
 
         public async Task<Footer> findFooterAsync(int id)
         {
-            return await dc.Footer.FindAsync(id);
+            //return await dc.Footer.FindAsync(id);
+            return await dc.Footer
+                .Include(m => m.FooterIcons)
+                .Include("FooterMenus.Links")
+                .FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public async Task<Footer> getFooterAsync()
         {
             return await dc.Footer
                 .Include(m => m.FooterIcons)
-                .Include(m => m.FooterMenus)
+                .Include("FooterMenus.Links")
                 .FirstOrDefaultAsync();
         }
     }

@@ -14,5 +14,7 @@ namespace traveltech2.Controllers.Dto
         public string Url { get; set; }
         [JsonIgnore]
         public IList<MenuItems> MenuItems { get; set; }
+        [JsonIgnore]
+        public IList<FooterMenus> FooterMenus { get; set; }
     }
 }
