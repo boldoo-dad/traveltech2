@@ -359,6 +359,7 @@ namespace traveltech2.Controllers
             var headDto = mapper.Map<HeadDto>(new HeadDto()
             {
                 Id = head.Id,
+                Color = head.Color,
                 Menus = head.Menus,
                 ImageName = head.ImageName,
                 ImageSrc = String.Format("{0}://{1}{2}/wwwroot/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, head.ImageName)

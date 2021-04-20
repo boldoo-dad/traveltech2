@@ -8,6 +8,8 @@ namespace traveltech2.Controllers.Dto
     public class HeadDto
     {
         public int Id { get; set; }
+
+        public string Color { get; set; }
         public string ImageName { get; set; }
         [NotMapped]
         public string ImageSrc { get; set; }

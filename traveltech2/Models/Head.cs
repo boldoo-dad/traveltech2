@@ -9,6 +9,7 @@ namespace traveltech2.Models
     public class Head 
     {
         public int Id { get; set; }
+        public string Color { get; set; }
         public string ImageName { get; set; }
         [NotMapped]
         public string ImageSrc { get; set; }
